@@ -21,9 +21,15 @@
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
-      "publishAllPorts": true,
-      "useSSL": true
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "environmentVariables": {
+        "ASPNETCORE_URLS": "https://+:443;http://+:80",
+        "ASPNETCORE_HTTPS_PORT": "44330",
+        "ConnectionStrings:DefaultConnection": "Data Source=MY_IP\\MY_INSTANCE;Initial Catalog=TestDb;User Id=MY_USER;Password=MY_PWD"
+      },
+      "httpPort": 10000,
+      "useSSL": true,
+      "sslPort": 44330
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json",

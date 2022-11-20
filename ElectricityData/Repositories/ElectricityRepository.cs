@@ -5,6 +5,7 @@ using ElectricityData.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 
 namespace ElectricityData.Repositories
 {
@@ -156,7 +157,7 @@ namespace ElectricityData.Repositories
                 var month = groupedData.Select(x => x.Month.Month).FirstOrDefault();
                 List<GroupedTinklasModel> groupedRecords = await _context.GroupedTinklas.Where(x => x.Month.Month == month).ToListAsync();
 
-                if (groupedRecords == null)
+                if (groupedRecords.Count == 0)
                 {
                     _logger.LogInformation($"{methodName} => adding data to database");
                     await _context.GroupedTinklas.AddRangeAsync(groupedData);
@@ -166,6 +167,30 @@ namespace ElectricityData.Repositories
                 //return success
                 _logger.LogInformation($"{methodName} => Successfully gathered grouped data");
                 return groupedData;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{methodName} => Exception: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<List<GroupedTinklasModel>> GetFourMonthesSumData()
+        {
+            var methodName = nameof(GetFourMonthesSumData);
+
+            try
+            {
+                var result = await (from record in _context.GroupedTinklas
+                             group record by record.Tinklas into groupResult
+                             select (new GroupedTinklasModel
+                             {
+                                 Tinklas = groupResult.Key,
+                                 PPlusSum = groupResult.Sum(x => x.PPlusSum),
+                                 PMinusSum = groupResult.Sum(x => x.PMinusSum)
+                             })).ToListAsync();
+
+                return result;
             }
             catch (Exception ex)
             {

@@ -74,5 +74,18 @@ namespace ElectricityData.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("get-all-sums")]
+        public async Task<IActionResult> GetAllData()
+        {
+            var result = await _repository.GetFourMonthesSumData();
+
+            if(result == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(result);
+        }
     }
 }
