@@ -10,5 +10,7 @@ namespace ElectricityData.Repositories
         public Task<Stream> GetStreamMarch();
         public Task<Stream> GetStreamFebruary();
         public Task<IEnumerable<GroupedTinklasModel>> Add(Stream stream);
+        public Task<List<GroupedTinklasModel>> GetFourMonthesSumData();
+
     }
 }
