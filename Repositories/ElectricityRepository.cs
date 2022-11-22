@@ -1,19 +1,15 @@
-﻿using CsvHelper;
-using CsvHelper.Configuration;
-using ElectricityData.Data;
-using ElectricityData.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using CsvHelper.Configuration;
+using CsvHelper;
+using Enitites;
+using Microsoft.Extensions.Logging;
 using System.Globalization;
-using System.IO;
-using System.Net;
-using System.Reflection;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Repositories.Data;
 
-namespace ElectricityData.Repositories
+namespace Repositories
 {
     public class ElectricityRepository : IElectricityRepository
     {
-
         #region Injection
         private readonly HttpClient _httpClient;
         private readonly AppDbContext _context;
@@ -48,7 +44,7 @@ namespace ElectricityData.Repositories
 
                 return readData;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"{methodName} => Exception: {ex.Message}");
                 return null;
@@ -56,7 +52,7 @@ namespace ElectricityData.Repositories
         }
 
         public async Task<IEnumerable<GroupedTinklasModel>> Add(Stream stream)
-     {
+        {
             var methodName = nameof(Add);
 
             try
@@ -113,13 +109,13 @@ namespace ElectricityData.Repositories
             try
             {
                 var result = await (from record in _context.GroupedTinklas
-                             group record by record.Tinklas into groupResult
-                             select (new GroupedTinklasModel
-                             {
-                                 Tinklas = groupResult.Key,
-                                 PPlusSum = groupResult.Sum(x => x.PPlusSum),
-                                 PMinusSum = groupResult.Sum(x => x.PMinusSum)
-                             })).ToListAsync();
+                                    group record by record.Tinklas into groupResult
+                                    select (new GroupedTinklasModel
+                                    {
+                                        Tinklas = groupResult.Key,
+                                        PPlusSum = groupResult.Sum(x => x.PPlusSum),
+                                        PMinusSum = groupResult.Sum(x => x.PMinusSum)
+                                    })).ToListAsync();
 
                 return result;
             }

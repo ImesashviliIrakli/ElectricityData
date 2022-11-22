@@ -1,9 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace ElectricityData.Models
+namespace Enitites
 {
     public class GroupedTinklasModel
     {
+        [Key]
         public int Id { get; set; }
         public string Tinklas { get; set; }
         public float? PPlusSum { get; set; }
@@ -11,3 +17,4 @@ namespace ElectricityData.Models
         public DateTime Month { get; set; }
     }
 }
+

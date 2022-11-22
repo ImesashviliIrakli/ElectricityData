@@ -1,8 +1,7 @@
 ﻿using CsvHelper.Configuration.Attributes;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-
-namespace ElectricityData.Models
+namespace Enitites
 {
     public class ElectricityModel
     {

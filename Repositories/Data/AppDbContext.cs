@@ -1,7 +1,6 @@
-﻿using ElectricityData.Models;
+﻿using Enitites;
 using Microsoft.EntityFrameworkCore;
-
-namespace ElectricityData.Data
+namespace Repositories.Data
 {
     public class AppDbContext : DbContext
     {
@@ -10,8 +9,6 @@ namespace ElectricityData.Data
         {
         }
 
-        public DbSet<ElectricityModel> ElectricityData { get; set; }
         public DbSet<GroupedTinklasModel> GroupedTinklas { get; set; }
-
     }
 }

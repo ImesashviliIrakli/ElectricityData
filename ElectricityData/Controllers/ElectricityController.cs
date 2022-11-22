@@ -1,6 +1,6 @@
-﻿using ElectricityData.Repositories;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Repositories;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
@@ -27,7 +27,7 @@ namespace ElectricityData.Controllers
         /// <param name="month" example="10763/2022-02"></param>
         /// <returns>List of sums</returns>
         /// <response code="400">If the format of the parameter is not like the examples, the api will return 400 BadRequest</response>
-        [HttpGet("get-data")]
+        [HttpPost("add-data")]
         public async Task<IActionResult> GetData(string month)
         {
             var stream = await _repository.GetStream(month);

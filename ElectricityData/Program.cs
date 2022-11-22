@@ -1,9 +1,6 @@
-using ElectricityData.Data;
-using ElectricityData.Repositories;
-using Microsoft.EntityFrameworkCore;
+using Repositories;
 using Serilog;
 using Serilog.Formatting.Json;
-using System.Linq.Expressions;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,13 +22,6 @@ var logger = new LoggerConfiguration()
 
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
-#endregion
-
-#region DbContext
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(connectionString));
 #endregion
 
 builder.Services.AddScoped<IElectricityRepository, ElectricityRepository>();
