@@ -5,7 +5,9 @@ using ElectricityData.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Reflection;
+using System.Text;
 
 namespace ElectricityData.Repositories
 {
@@ -27,13 +29,15 @@ namespace ElectricityData.Repositories
         }
         #endregion
 
-        public async Task<Stream> GetStreamMay()
+
+        public async Task<Stream> GetStream(string month)
         {
-            var methodName = nameof(GetStreamMay);
+            var methodName = nameof(GetStream);
+
             try
             {
                 _httpClient.Timeout = TimeSpan.FromSeconds(200);
-                string url = "https://data.gov.lt/dataset/1975/download/10766/2022-05.csv";
+                var url = $"https://data.gov.lt/dataset/1975/download/" + month + ".csv";
 
                 _logger.LogInformation($"{methodName} => Getting stream from url");
 
@@ -44,80 +48,7 @@ namespace ElectricityData.Repositories
 
                 return readData;
             }
-            catch (Exception ex)
-            {
-                _logger.LogError($"{methodName} => Exception: {ex.Message}");
-                return null;
-            }
-        }
-
-        public async Task<Stream> GetStreamApril()
-        {
-            var methodName = nameof(GetStreamApril);
-            try
-            {
-                _httpClient.Timeout = TimeSpan.FromSeconds(200);
-                string url = "https://data.gov.lt/dataset/1975/download/10765/2022-04.csv";
-
-                _logger.LogInformation($"{methodName} => Getting stream from url");
-
-                var response = await _httpClient.GetAsync(url);
-                var readData = await response.Content.ReadAsStreamAsync();
-
-                _logger.LogInformation($"{methodName} => Successfully got stream for may");
-
-                return readData;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"{methodName} => Exception: {ex.Message}");
-                return null;
-            }
-        }
-
-        public async Task<Stream> GetStreamMarch()
-        {
-            var methodName = nameof(GetStreamMarch);
-            try
-            {
-                _httpClient.Timeout = TimeSpan.FromSeconds(200);
-                string url = "https://data.gov.lt/dataset/1975/download/10764/2022-03.csv";
-
-                _logger.LogInformation($"{methodName} => Getting stream from url");
-
-                var response = await _httpClient.GetAsync(url);
-                var readData = await response.Content.ReadAsStreamAsync();
-
-                _logger.LogInformation($"{methodName} => Successfully got stream for may");
-
-                return readData;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"{methodName} => Exception: {ex.Message}");
-                return null;
-            }
-        }
-
-        public async Task<Stream> GetStreamFebruary()
-        {
-            var methodName = nameof(GetStreamFebruary);
-
-            try
-            {
-                _httpClient.Timeout = TimeSpan.FromSeconds(200);
-                string url = "https://data.gov.lt/dataset/1975/download/10763/2022-02.csv";
-
-                _logger.LogInformation($"{methodName} => Getting stream from url");
-
-                var response = await _httpClient.GetAsync(url);
-                var readData = await response.Content.ReadAsStreamAsync();
-
-                _logger.LogInformation($"{methodName} => Successfully got stream for may");
-
-                return readData;
-            }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 _logger.LogError($"{methodName} => Exception: {ex.Message}");
                 return null;
@@ -125,7 +56,7 @@ namespace ElectricityData.Repositories
         }
 
         public async Task<IEnumerable<GroupedTinklasModel>> Add(Stream stream)
-        {
+     {
             var methodName = nameof(Add);
 
             try
