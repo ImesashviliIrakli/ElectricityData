@@ -25,7 +25,10 @@ namespace ElectricityData.Controllers
         /// For MAY - 10766/2022-05
         /// </summary>
         /// <param name="month" example="10763/2022-02"></param>
-        /// <returns>List of sums of the chosen month</returns>
+        /// <returns>List of sums of the chosen month,
+        /// if the data of a current month has already been added, no worries,
+        /// it won't add the same values, it will just return a list without adding it to the database.
+        /// </returns>
         /// <response code="400">If the format of the parameter is not like the examples, the api will return 400 BadRequest</response>
         [HttpPost("add-data")]
         public async Task<IActionResult> GetData(string month)
