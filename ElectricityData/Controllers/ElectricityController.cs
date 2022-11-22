@@ -25,7 +25,7 @@ namespace ElectricityData.Controllers
         /// For MAY - 10766/2022-05
         /// </summary>
         /// <param name="month" example="10763/2022-02"></param>
-        /// <returns>List of sums</returns>
+        /// <returns>List of sums of the chosen month</returns>
         /// <response code="400">If the format of the parameter is not like the examples, the api will return 400 BadRequest</response>
         [HttpPost("add-data")]
         public async Task<IActionResult> GetData(string month)
