@@ -1,6 +1,6 @@
 ﻿using Enitites;
 using Microsoft.EntityFrameworkCore;
-namespace Repositories.Data
+namespace Enitites.Data
 {
     public class AppDbContext : DbContext
     {

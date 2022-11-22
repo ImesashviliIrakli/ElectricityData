@@ -4,7 +4,7 @@ using Enitites;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
-using Repositories.Data;
+using Enitites.Data;
 
 namespace Repositories
 {

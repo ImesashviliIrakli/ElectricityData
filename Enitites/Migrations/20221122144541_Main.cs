@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ElectricityData.Migrations
+namespace Enitites.Migrations
 {
     /// <inheritdoc />
     public partial class Main : Migration
