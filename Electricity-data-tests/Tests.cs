@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Repositories;
+using Repositories.ElectricityRepositories;
 
 namespace Electricity_data_tests
 {

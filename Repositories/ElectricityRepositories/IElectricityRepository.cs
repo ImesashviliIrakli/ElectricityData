@@ -1,6 +1,6 @@
 ﻿using Enitites;
 
-namespace Repositories
+namespace Repositories.ElectricityRepositories
 {
     public interface IElectricityRepository
     {

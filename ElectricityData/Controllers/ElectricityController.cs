@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Repositories;
-using Swashbuckle.AspNetCore.Annotations;
-using System.Net;
+using Repositories.ElectricityRepositories;
 
 namespace ElectricityData.Controllers
 {
@@ -30,7 +27,7 @@ namespace ElectricityData.Controllers
         /// it won't add the same values, it will just return a list without adding it to the database.
         /// </returns>
         /// <response code="400">If the format of the parameter is not like the examples, the api will return 400 BadRequest</response>
-        [HttpPost("add-data")]
+        [HttpPost("data")]
         public async Task<IActionResult> GetData(string month)
         {
             var stream = await _repository.GetStream(month);

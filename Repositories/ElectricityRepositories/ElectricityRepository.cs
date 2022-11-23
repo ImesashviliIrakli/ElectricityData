@@ -6,7 +6,7 @@ using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Enitites.Data;
 
-namespace Repositories
+namespace Repositories.ElectricityRepositories
 {
     public class ElectricityRepository : IElectricityRepository
     {
