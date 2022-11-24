@@ -11,38 +11,25 @@ namespace Repositories.ElectricityRepositories
     public class ElectricityRepository : IElectricityRepository
     {
         #region Injection
-        private readonly HttpClient _httpClient;
         private readonly AppDbContext _context;
         private readonly ILogger<ElectricityRepository> _logger;
         public ElectricityRepository(
-            HttpClient httpClient,
             AppDbContext context,
             ILogger<ElectricityRepository> logger)
         {
-            _httpClient = httpClient;
             _context = context;
             _logger = logger;
         }
         #endregion
 
-
-        public async Task<Stream> GetStream(string month)
+        public async Task<List<GroupedTinklasModel>> GetByMonth(int month)
         {
-            var methodName = nameof(GetStream);
+            var methodName = nameof(GetByMonth);
 
             try
             {
-                _httpClient.Timeout = TimeSpan.FromSeconds(200);
-                var url = $"https://data.gov.lt/dataset/1975/download/" + month + ".csv";
-
-                _logger.LogInformation($"{methodName} => Getting stream from url");
-
-                var response = await _httpClient.GetAsync(url);
-                var readData = await response.Content.ReadAsStreamAsync();
-
-                _logger.LogInformation($"{methodName} => Successfully got stream for may");
-
-                return readData;
+                var result = await _context.GroupedTinklas.Where(x => x.Month.Month == month).ToListAsync();
+                return result;
             }
             catch (Exception ex)
             {
@@ -51,60 +38,9 @@ namespace Repositories.ElectricityRepositories
             }
         }
 
-        public async Task<IEnumerable<GroupedTinklasModel>> Add(Stream stream)
+        public async Task<List<GroupedTinklasModel>> GetAll()
         {
-            var methodName = nameof(Add);
-
-            try
-            {
-                var streamReader = new StreamReader(stream);
-
-                var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-                {
-                    HeaderValidated = null,
-                    MissingFieldFound = null
-                };
-
-                //get records rom stream
-                var csv = new CsvReader(streamReader, config);
-                var records = csv.GetRecords<ElectricityModel>().Where(x => x.OBT_PAVADINIMAS.Equals("Butas"));
-
-                //Get grouped data using LINQ
-                var groupedData = (from record in records
-                                   group record by record.TINKLAS into groupResult
-                                   select (new GroupedTinklasModel
-                                   {
-                                       Tinklas = groupResult.Key,
-                                       PPlusSum = groupResult.Sum(x => x.PPlus),
-                                       PMinusSum = groupResult.Sum(x => x.PMINUS),
-                                       Month = groupResult.Max(x => x.PL_T)
-                                   })).ToList();
-
-                //check if the data already exists
-                var month = groupedData.Select(x => x.Month.Month).FirstOrDefault();
-                List<GroupedTinklasModel> groupedRecords = await _context.GroupedTinklas.Where(x => x.Month.Month == month).ToListAsync();
-
-                if (groupedRecords.Count == 0)
-                {
-                    _logger.LogInformation($"{methodName} => adding data to database");
-                    await _context.GroupedTinklas.AddRangeAsync(groupedData);
-                    await _context.SaveChangesAsync();
-                }
-
-                //return success
-                _logger.LogInformation($"{methodName} => Successfully gathered grouped data");
-                return groupedData;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"{methodName} => Exception: {ex.Message}");
-                return null;
-            }
-        }
-
-        public async Task<List<GroupedTinklasModel>> GetFourMonthesSumData()
-        {
-            var methodName = nameof(GetFourMonthesSumData);
+            var methodName = nameof(GetAll);
 
             try
             {

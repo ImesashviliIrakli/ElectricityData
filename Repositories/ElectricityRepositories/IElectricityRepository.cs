@@ -4,8 +4,7 @@ namespace Repositories.ElectricityRepositories
 {
     public interface IElectricityRepository
     {
-        public Task<Stream> GetStream(string month);
-        public Task<IEnumerable<GroupedTinklasModel>> Add(Stream stream);
-        public Task<List<GroupedTinklasModel>> GetFourMonthesSumData();
+        public Task<List<GroupedTinklasModel>> GetAll();
+        public Task<List<GroupedTinklasModel>> GetByMonth(int month);
     }
 }

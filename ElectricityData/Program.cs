@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 #region LoggerServices
-string path = @"c:\temp\logs\studentPortal_Logs.json";
+string path = @"c:\temp\logs\ElectricityData_logs.json";
 
 builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile(path: "appSettings.json", optional: false, reloadOnChange: true)
@@ -36,6 +36,14 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
+#endregion
+
+#region LocalVariables
+var log = builder.Logging.Services.BuildServiceProvider().GetRequiredService<ILogger<DownloadDataRepository>>();
+var dbContextOptions = new DbContextOptionsBuilder<AppDbContext>()
+                    .UseSqlServer(connectionString)
+                    .Options;
+var context = new AppDbContext(dbContextOptions);
 #endregion
 
 builder.Services.AddScoped<IElectricityRepository, ElectricityRepository>();
@@ -61,24 +69,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-var log = builder.Logging.Services.BuildServiceProvider().GetRequiredService<ILogger<DownloadDataRepository>>();
-
-var client = new HttpClient();
-var dbContextOptions = new DbContextOptionsBuilder<AppDbContext>()
-                .UseSqlServer(connectionString)
-                .Options;
-var context = new AppDbContext(dbContextOptions);
-
-var repository = new DownloadDataRepository(context, log);
-
-var taskList = new List<Task<bool>> {
-    repository.DownloadData("10763/2022-02"),
-    repository.DownloadData("10764/2022-03"),
-    repository.DownloadData("10765/2022-04"),
-    repository.DownloadData("10766/2022-05")
-};
-
-Task.WhenAll(taskList);
+await Download(log, context);
 
 app.UseHttpsRedirection();
 
@@ -87,3 +78,12 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+static async Task Download(ILogger<DownloadDataRepository> log, AppDbContext context)
+{
+    
+    var repository = new DownloadDataRepository(context, log);
+
+    await repository.DownloadAll();
+
+}

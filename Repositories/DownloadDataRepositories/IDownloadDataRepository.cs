@@ -8,6 +8,6 @@ namespace Repositories.DownloadDataRepositories
 {
     public interface IDownloadDataRepository
     {
-        public Task<bool> DownloadData(string month);
+        public Task DownloadAll();
     }
 }

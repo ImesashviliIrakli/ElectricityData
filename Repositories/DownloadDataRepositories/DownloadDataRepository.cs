@@ -20,11 +20,9 @@ namespace Repositories.DownloadDataRepositories
     public class DownloadDataRepository : IDownloadDataRepository
     {
         #region Injection
-        //private readonly HttpClient _client;
         private readonly AppDbContext _context;
         private readonly ILogger<DownloadDataRepository> _logger;
         public DownloadDataRepository(
-            //HttpClient client,
             AppDbContext context,
             ILogger<DownloadDataRepository> logger)
         {
@@ -32,11 +30,30 @@ namespace Repositories.DownloadDataRepositories
             _context = context;
             _logger = logger;
         }
-
         #endregion
 
         //This method downloads the electricity data and adds it to the DB.
-        public async Task<bool> DownloadData(string month)
+        public async Task DownloadAll()
+        {
+            var methodName = nameof(DownloadLastFourMonths);
+            try
+            {
+                var taskList = new List<Task> {
+                DownloadData("10763/2022-02"),
+                DownloadData("10764/2022-03"),
+                DownloadData("10765/2022-04"),
+                DownloadData("10766/2022-05")
+                };
+
+                await Task.WhenAll(taskList);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{methodName} => Exception: {ex.Message}");
+            }
+        }
+
+        private async Task DownloadData(string month)
         {
             var methodName = nameof(DownloadData);
             try
@@ -44,19 +61,25 @@ namespace Repositories.DownloadDataRepositories
                 _logger.LogInformation($"{methodName} => Started downloading data");
                 var stream = await GetStream(month);
 
-                if(stream == null)
+                if (stream == null)
                 {
-                    return false;
+                    _logger.LogError($"{methodName} => Could not get stream");
+                    return;
                 }
 
                 var add = await AddToDB(stream);
 
-                return add;
+                if (!add)
+                {
+                    _logger.LogError($"{methodName} => Could not add to DB");
+                    return;
+                }
+
+                _logger.LogInformation($"{methodName} => Data was added successfully");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"{methodName} => Exception: {ex.Message}");
-                return false;
             }
         }
 
@@ -106,7 +129,7 @@ namespace Repositories.DownloadDataRepositories
                 var records = csv.GetRecords<ElectricityModel>().Where(x => x.OBT_PAVADINIMAS.Equals("Butas"));
 
                 //Get grouped data using LINQ
-                var groupedData =  (from record in records
+                var groupedData = (from record in records
                                    group record by record.TINKLAS into groupResult
                                    select (new GroupedTinklasModel
                                    {
