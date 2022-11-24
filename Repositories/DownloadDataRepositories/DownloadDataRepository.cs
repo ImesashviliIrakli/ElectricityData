@@ -20,15 +20,15 @@ namespace Repositories.DownloadDataRepositories
     public class DownloadDataRepository : IDownloadDataRepository
     {
         #region Injection
-        private readonly HttpClient _client;
+        //private readonly HttpClient _client;
         private readonly AppDbContext _context;
         private readonly ILogger<DownloadDataRepository> _logger;
         public DownloadDataRepository(
-            HttpClient client,
+            //HttpClient client,
             AppDbContext context,
             ILogger<DownloadDataRepository> logger)
         {
-            _client = client;
+            //_client = client;
             _context = context;
             _logger = logger;
         }
@@ -67,6 +67,7 @@ namespace Repositories.DownloadDataRepositories
 
             try
             {
+                var _client = new HttpClient();
                 _client.Timeout = TimeSpan.FromSeconds(200);
                 var url = $"https://data.gov.lt/dataset/1975/download/" + month + ".csv";
 

@@ -69,14 +69,16 @@ var dbContextOptions = new DbContextOptionsBuilder<AppDbContext>()
                 .Options;
 var context = new AppDbContext(dbContextOptions);
 
-var repository = new DownloadDataRepository(client, context, log);
+var repository = new DownloadDataRepository(context, log);
 
-var taskList = new List<Task<bool>>();
-var data02 = repository.DownloadData("10763/2022-02");
-var data03 = repository.DownloadData("10764/2022-03");
-var data04 = repository.DownloadData("10765/2022-04");
-var data05 = repository.DownloadData("10766/2022-05");
+var taskList = new List<Task<bool>> {
+    repository.DownloadData("10763/2022-02"),
+    repository.DownloadData("10764/2022-03"),
+    repository.DownloadData("10765/2022-04"),
+    repository.DownloadData("10766/2022-05")
+};
 
+Task.WhenAll(taskList);
 
 app.UseHttpsRedirection();
 
