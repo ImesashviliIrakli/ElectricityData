@@ -1,42 +1,64 @@
-﻿using Enitites.Data;
+﻿using Enitites;
+using Enitites.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Repositories.ElectricityRepositories;
+using System;
 
 namespace Electricity_data_tests
 {
     public class Tests
     {
-        public static DbContextOptions<AppDbContext> dbContextOptions { get; set; }
-        public static string connectionString = @"Server=(localdb)\mssqllocaldb;Database=ElectricityProject;Trusted_Connection=True;MultipleActiveResultSets=true";
+        private static DbContextOptions<AppDbContext> s_dbContextOptions { get; set; }
+        private static string s_connectionString = @"Server=(localdb)\mssqllocaldb;Database=ElectricityProject;Trusted_Connection=True;MultipleActiveResultSets=true";
 
-        [TestCase("10763/2022-02", ExpectedResult = true)]
-        [TestCase("10764/2022-03", ExpectedResult = true)]
-        [TestCase("10765/2022-04", ExpectedResult = true)]
-        [TestCase("10766/2022-05", ExpectedResult = true)]
+        [TestCase(2, ExpectedResult = true)]
+        [TestCase(3, ExpectedResult = true)]
+        [TestCase(4, ExpectedResult = true)]
+        [TestCase(5, ExpectedResult = true)]
 
-        public async Task<bool> GetDataTests(string month)
+        public async Task<bool> GetByMonthTests(int month)
         {
-            ILogger<ElectricityRepository> logger = Mock.Of<ILogger<ElectricityRepository>>();
-
-            var httpClient = new HttpClient();
-
-            dbContextOptions = new DbContextOptionsBuilder<AppDbContext>()
-                .UseSqlServer(connectionString)
-                .Options;
-
-            var context = new AppDbContext(dbContextOptions);
-
-            var repo = new ElectricityRepository(httpClient, context, logger);
-
             try
             {
-                var stream = await repo.GetStream(month);
+                ILogger<ElectricityRepository> logger = Mock.Of<ILogger<ElectricityRepository>>();
 
-                Assert.That(stream, Is.Not.Null);
+                s_dbContextOptions = new DbContextOptionsBuilder<AppDbContext>()
+                    .UseSqlServer(s_connectionString)
+                    .Options;
 
-                var result = await repo.Add(stream);
+                var context = new AppDbContext(s_dbContextOptions);
+
+                var repo = new ElectricityRepository(context, logger);
+
+                List<AggregatedData> result = await repo.GetByMonth(month);
+
+                Assert.That(result, Is.Not.Null);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        [TestCase(ExpectedResult = true)]
+        public async Task<bool> GetAllTest()
+        {
+            try
+            {
+                ILogger<ElectricityRepository> logger = Mock.Of<ILogger<ElectricityRepository>>();
+
+                s_dbContextOptions = new DbContextOptionsBuilder<AppDbContext>()
+                    .UseSqlServer(s_connectionString)
+                    .Options;
+
+                var context = new AppDbContext(s_dbContextOptions);
+
+                var repo = new ElectricityRepository(context, logger);
+                List<AggregatedData> result = await repo.GetAll();
 
                 Assert.That(result, Is.Not.Null);
 

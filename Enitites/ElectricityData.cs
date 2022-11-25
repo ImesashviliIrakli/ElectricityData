@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 namespace Enitites
 {
-    public class ElectricityModel
+    public class ElectricityData
     {
         [Key]
         public int Id { get; set; }

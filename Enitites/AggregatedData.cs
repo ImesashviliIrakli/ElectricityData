@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Enitites
 {
-    public class GroupedTinklasModel
+    public class AggregatedData
     {
         [Key]
         public int Id { get; set; }
         public string Tinklas { get; set; }
         public float? PPlusSum { get; set; }
         public float? PMinusSum { get; set; }
-        public DateTime Month { get; set; }
+        public DateTime Date { get; set; }
     }
 }
 

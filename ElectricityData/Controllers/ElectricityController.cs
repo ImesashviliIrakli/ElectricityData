@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Enitites;
+using Microsoft.AspNetCore.Mvc;
 using Repositories.ElectricityRepositories;
 
 namespace ElectricityData.Controllers
@@ -14,30 +15,16 @@ namespace ElectricityData.Controllers
         }
 
         #endregion
+
         /// <summary>
-        /// Add either on of these in the months field:
-        /// For FEB - 10763/2022-02,
-        /// For March - 10764/2022-03,
-        /// For APR - 10765/2022-04,
-        /// For MAY - 10766/2022-05
+        /// returns the sum of every record that has been added for each month. 
+        /// It is grouped by TINKLAS.
         /// </summary>
-        /// <param name="month" example="10763/2022-02"></param>
-        /// <returns>List of sums of the chosen month,
-        /// if the data of a current month has already been added, no worries,
-        /// it won't add the same values, it will just return a list without adding it to the database.
-        /// </returns>
-        /// <response code="400">If the format of the parameter is not like the examples, the api will return 400 BadRequest</response>
+        /// <returns>List of all sums</returns>
         [HttpGet("data")]
-        public async Task<IActionResult> GetData(string month)
+        public async Task<IActionResult> GetAllData()
         {
-            var stream = await _repository.GetStream(month);
-
-            if (stream == null)
-            {
-                return BadRequest();
-            }
-
-            var result = await _repository.Add(stream);
+            List<AggregatedData> result = await _repository.GetAll();
 
             if (result == null)
             {
@@ -48,13 +35,22 @@ namespace ElectricityData.Controllers
         }
 
         /// <summary>
-        /// returns the sums of every record that has been added for each month, and it is grouped by TINKLAS
+        /// Add either on of these in the months field:
+        /// For FEB - 2,
+        /// For March - 3,
+        /// For APR - 4,
+        /// For MAY - 5
         /// </summary>
-        /// <returns>List of all sums</returns>
-        [HttpGet("get-all-sums")]
-        public async Task<IActionResult> GetAllData()
+        /// <param name="month" example="10763/2022-02"></param>
+        /// <returns>List of sums of the chosen month,
+        /// if the data of a current month has already been added, no worries,
+        /// it won't add the same values, it will just return a list without adding it to the database.
+        /// </returns>
+        /// <response code="400">If the format of the parameter is not like the examples, the api will return 400 BadRequest</response>
+        [HttpGet("data/{month}")]
+        public async Task<IActionResult> GetData(int month)
         {
-            var result = await _repository.GetFourMonthesSumData();
+            List<AggregatedData> result = await _repository.GetByMonth(month);
 
             if (result == null)
             {

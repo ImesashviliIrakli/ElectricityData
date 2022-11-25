@@ -22,13 +22,13 @@ namespace Repositories.ElectricityRepositories
         }
         #endregion
 
-        public async Task<List<GroupedTinklasModel>> GetByMonth(int month)
+        public async Task<List<AggregatedData>> GetByMonth(int month)
         {
-            var methodName = nameof(GetByMonth);
+            string methodName = nameof(GetByMonth);
 
             try
             {
-                var result = await _context.GroupedTinklas.Where(x => x.Month.Month == month).ToListAsync();
+                List<AggregatedData> result = await _context.AggregatedData.Where(x => x.Date.Month == month).ToListAsync();
                 return result;
             }
             catch (Exception ex)
@@ -38,20 +38,20 @@ namespace Repositories.ElectricityRepositories
             }
         }
 
-        public async Task<List<GroupedTinklasModel>> GetAll()
+        public async Task<List<AggregatedData>> GetAll()
         {
-            var methodName = nameof(GetAll);
+            string methodName = nameof(GetAll);
 
             try
             {
-                var result = await (from record in _context.GroupedTinklas
-                                    group record by record.Tinklas into groupResult
-                                    select (new GroupedTinklasModel
-                                    {
-                                        Tinklas = groupResult.Key,
-                                        PPlusSum = groupResult.Sum(x => x.PPlusSum),
-                                        PMinusSum = groupResult.Sum(x => x.PMinusSum)
-                                    })).ToListAsync();
+                List<AggregatedData> result = await (from record in _context.AggregatedData
+                                                          group record by record.Tinklas into groupResult
+                                                          select (new AggregatedData
+                                                          {
+                                                              Tinklas = groupResult.Key,
+                                                              PPlusSum = groupResult.Sum(x => x.PPlusSum),
+                                                              PMinusSum = groupResult.Sum(x => x.PMinusSum)
+                                                          })).ToListAsync();
 
                 return result;
             }

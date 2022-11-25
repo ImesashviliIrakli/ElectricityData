@@ -9,6 +9,6 @@ namespace Enitites.Data
         {
         }
 
-        public DbSet<GroupedTinklasModel> GroupedTinklas { get; set; }
+        public DbSet<AggregatedData> AggregatedData { get; set; }
     }
 }

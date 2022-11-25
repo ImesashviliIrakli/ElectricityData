@@ -22,7 +22,7 @@ namespace Enitites.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Enitites.GroupedTinklasModel", b =>
+            modelBuilder.Entity("Enitites.AggregatedData", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,7 +30,7 @@ namespace Enitites.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Month")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<float?>("PMinusSum")
@@ -44,7 +44,7 @@ namespace Enitites.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GroupedTinklas");
+                    b.ToTable("AggregatedData");
                 });
 #pragma warning restore 612, 618
         }
