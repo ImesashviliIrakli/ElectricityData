@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Writers;
 using Repositories.DownloadDataRepositories;
 using Repositories.ElectricityRepositories;
 using Serilog;
@@ -38,13 +39,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString), ServiceLifetime.Transient);
 #endregion
 
-#region LocalVariables
-var log = builder.Logging.Services.BuildServiceProvider().GetRequiredService<ILogger<DownloadDataRepository>>();
-var dbContextOptions = new DbContextOptionsBuilder<AppDbContext>()
-                    .UseSqlServer(connectionString)
-                    .Options;
-var context = new AppDbContext(dbContextOptions);
-#endregion
+
 
 builder.Services.AddScoped<IElectricityRepository, ElectricityRepository>();
 builder.Services.AddTransient<IDownloadDataRepository, DownloadDataRepository>();
@@ -62,6 +57,12 @@ builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
+#region Create instance of DownloadDataRepository
+var dbcontext = app.Services.GetRequiredService<AppDbContext>();
+var log = app.Services.GetRequiredService<ILogger<DownloadDataRepository>>();
+var repository = new DownloadDataRepository(dbcontext, log);
+#endregion
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -69,7 +70,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-await Download(log, context);
+await repository.DownloadAll();
 
 app.UseHttpsRedirection();
 
@@ -78,12 +79,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-static async Task Download(ILogger<DownloadDataRepository> log, AppDbContext context)
-{
-    
-    var repository = new DownloadDataRepository(context, log);
-
-    await repository.DownloadAll();
-
-}
