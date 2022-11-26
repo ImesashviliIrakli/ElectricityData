@@ -1,5 +1,4 @@
-﻿using Enitites;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 namespace Enitites.Data
 {
     public class AppDbContext : DbContext

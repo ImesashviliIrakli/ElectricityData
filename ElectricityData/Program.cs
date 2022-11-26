@@ -1,14 +1,8 @@
-
 using Contracts;
 using DownloadService;
 using Enitites.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Writers;
 using Repositories;
-using Repositories.DownloadDataRepositories;
 using Serilog;
 using Serilog.Formatting.Json;
 using System.Reflection;
@@ -54,6 +48,7 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 builder.Services.AddHttpClient();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
@@ -61,7 +56,7 @@ var app = builder.Build();
 
 var dbcontext = app.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
 var log = app.Services.GetRequiredService<ILogger<DownloadManager>>();
-var electricity = app.Services.GetRequiredService<IElectricityRepository>();
+var electricity = app.Services.CreateScope().ServiceProvider.GetRequiredService<IElectricityRepository>();
 var repository = new DownloadManager(dbcontext, log, electricity);
 #endregion
 

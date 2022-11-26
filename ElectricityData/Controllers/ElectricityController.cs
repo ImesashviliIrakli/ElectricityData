@@ -1,5 +1,7 @@
-﻿using Contracts;
+﻿using AutoMapper;
+using Contracts;
 using Enitites;
+using Enitites.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Repositories;
 
@@ -10,11 +12,12 @@ namespace ElectricityData.Controllers
     {
         #region Injection
         private readonly IElectricityRepository _repository;
-        public ElectricityController(IElectricityRepository repository)
+        private readonly IMapper _mapper;
+        public ElectricityController(IElectricityRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
-
         #endregion
 
         /// <summary>
@@ -25,11 +28,13 @@ namespace ElectricityData.Controllers
         [HttpGet("data")]
         public async Task<IActionResult> GetAllData()
         {
-            List<AggregatedData> result = await _repository.GetAll();
+            List<AggregatedData> data = await _repository.GetAll();
+            List<AggregatedDataViewModel> result = _mapper.Map<List<AggregatedDataViewModel>>(data);
+            result.ForEach(x => x.Month = "2022-02, 2022-03, 2022-04, 2022-05");
 
             if (result == null)
             {
-                return BadRequest();
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
             return Ok(result);
@@ -51,11 +56,17 @@ namespace ElectricityData.Controllers
         [HttpGet("data/{month}")]
         public async Task<IActionResult> GetData(int month)
         {
-            List<AggregatedData> result = await _repository.GetByMonth(month);
+            if(month > 5 || month < 2)
+            {
+                return BadRequest("Wrong number");
+            }
+
+            List<AggregatedData> data = await _repository.GetByMonth(month);
+            List<AggregatedDataViewModel> result = _mapper.Map<List<AggregatedDataViewModel>>(data);
 
             if (result == null)
             {
-                return BadRequest();
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
             return Ok(result);

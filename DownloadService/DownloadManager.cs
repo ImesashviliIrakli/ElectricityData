@@ -4,12 +4,7 @@ using CsvHelper;
 using Enitites.Data;
 using Enitites;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace DownloadService
