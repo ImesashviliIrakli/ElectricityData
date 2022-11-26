@@ -5,8 +5,9 @@ using Microsoft.Extensions.Logging;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Enitites.Data;
+using Contracts;
 
-namespace Repositories.ElectricityRepositories
+namespace Repositories
 {
     public class ElectricityRepository : IElectricityRepository
     {
@@ -45,13 +46,13 @@ namespace Repositories.ElectricityRepositories
             try
             {
                 List<AggregatedData> result = await (from record in _context.AggregatedData
-                                                          group record by record.Tinklas into groupResult
-                                                          select (new AggregatedData
-                                                          {
-                                                              Tinklas = groupResult.Key,
-                                                              PPlusSum = groupResult.Sum(x => x.PPlusSum),
-                                                              PMinusSum = groupResult.Sum(x => x.PMinusSum)
-                                                          })).ToListAsync();
+                                                     group record by record.Tinklas into groupResult
+                                                     select (new AggregatedData
+                                                     {
+                                                         Tinklas = groupResult.Key,
+                                                         PPlusSum = groupResult.Sum(x => x.PPlusSum),
+                                                         PMinusSum = groupResult.Sum(x => x.PMinusSum)
+                                                     })).ToListAsync();
 
                 return result;
             }
@@ -59,6 +60,24 @@ namespace Repositories.ElectricityRepositories
             {
                 _logger.LogError($"{methodName} => Exception: {ex.Message}");
                 return null;
+            }
+        }
+    
+        public async Task<bool> Add(List<AggregatedData> data)
+        {
+            string methodName = nameof(Add);
+            try
+            {
+                await _context.AggregatedData.AddRangeAsync(data);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"{methodName} => Successfully added to DB");
+                return true;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"{methodName} => Exception: {ex.Message}");
+                return false;
             }
         }
     }

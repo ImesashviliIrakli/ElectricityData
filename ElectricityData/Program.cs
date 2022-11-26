@@ -1,12 +1,14 @@
 
+using Contracts;
+using DownloadService;
 using Enitites.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Writers;
+using Repositories;
 using Repositories.DownloadDataRepositories;
-using Repositories.ElectricityRepositories;
 using Serilog;
 using Serilog.Formatting.Json;
 using System.Reflection;
@@ -36,13 +38,11 @@ builder.Logging.AddSerilog(logger);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(connectionString), ServiceLifetime.Transient);
+    options.UseSqlServer(connectionString));
 #endregion
 
-
-
 builder.Services.AddScoped<IElectricityRepository, ElectricityRepository>();
-builder.Services.AddTransient<IDownloadDataRepository, DownloadDataRepository>();
+builder.Services.AddTransient<IDownloadManager, DownloadManager>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -58,9 +58,11 @@ builder.Services.AddHttpClient();
 var app = builder.Build();
 
 #region Create instance of DownloadDataRepository
-var dbcontext = app.Services.GetRequiredService<AppDbContext>();
-var log = app.Services.GetRequiredService<ILogger<DownloadDataRepository>>();
-var repository = new DownloadDataRepository(dbcontext, log);
+
+var dbcontext = app.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
+var log = app.Services.GetRequiredService<ILogger<DownloadManager>>();
+var electricity = app.Services.GetRequiredService<IElectricityRepository>();
+var repository = new DownloadManager(dbcontext, log, electricity);
 #endregion
 
 // Configure the HTTP request pipeline.

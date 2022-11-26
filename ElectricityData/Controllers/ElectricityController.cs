@@ -1,6 +1,7 @@
-﻿using Enitites;
+﻿using Contracts;
+using Enitites;
 using Microsoft.AspNetCore.Mvc;
-using Repositories.ElectricityRepositories;
+using Repositories;
 
 namespace ElectricityData.Controllers
 {

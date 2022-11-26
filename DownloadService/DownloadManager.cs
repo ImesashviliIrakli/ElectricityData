@@ -1,25 +1,34 @@
-﻿using CsvHelper.Configuration;
+﻿using Contracts;
+using CsvHelper.Configuration;
 using CsvHelper;
-using Enitites;
 using Enitites.Data;
+using Enitites;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace Repositories.DownloadDataRepositories
+namespace DownloadService
 {
-    public class DownloadDataRepository : IDownloadDataRepository
+    public class DownloadManager : IDownloadManager
     {
         #region Injection
         private readonly AppDbContext _context;
-        private readonly ILogger<DownloadDataRepository> _logger;
-        public DownloadDataRepository(
+        private readonly ILogger<DownloadManager> _logger;
+        private readonly IElectricityRepository _repository;
+        public DownloadManager(
             AppDbContext context,
-            ILogger<DownloadDataRepository> logger)
+            ILogger<DownloadManager> logger,
+            IElectricityRepository repository)
         {
             //_client = client;
             _context = context;
             _logger = logger;
+            _repository = repository;
         }
         #endregion
 
@@ -145,12 +154,9 @@ namespace Repositories.DownloadDataRepositories
                                                     })).ToList();
 
                 // Add data to DB.
-                await _context.AggregatedData.AddRangeAsync(groupedData);
-                await _context.SaveChangesAsync();
+                bool add = await _repository.Add(groupedData);
 
-                _logger.LogInformation($"{methodName} => Successfully added data to DB");
-
-                return true;
+                return add;
             }
             catch (Exception ex)
             {

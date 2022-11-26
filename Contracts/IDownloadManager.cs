@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repositories.DownloadDataRepositories
+namespace Contracts
 {
-    public interface IDownloadDataRepository
+    public interface IDownloadManager
     {
         public Task DownloadAll();
     }
