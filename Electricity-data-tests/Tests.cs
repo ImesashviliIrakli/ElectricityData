@@ -18,7 +18,6 @@ namespace Electricity_data_tests
         [TestCase(3, ExpectedResult = true)]
         [TestCase(4, ExpectedResult = true)]
         [TestCase(5, ExpectedResult = true)]
-
         public async Task<bool> GetByMonthTests(int month)
         {
             try

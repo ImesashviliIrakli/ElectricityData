@@ -799,3 +799,25 @@
 2022-11-27 17:18:32.1674 Debug FileTarget(Name=logfile): Preparing for new file '/app/bin/Debug/net6.0/C:\temp\logs\2022-11-27_logfile.txt'
 2022-11-27 17:18:32.1674 Debug FileTarget(Name=logfile): Creating file appender: /app/bin/Debug/net6.0/C:\temp\logs\2022-11-27_logfile.txt
 2022-11-27 17:18:32.1783 Trace FileTarget(Name=logfile): Opening /app/bin/Debug/net6.0/C:\temp\logs\2022-11-27_logfile.txt with allowFileSharedWriting=False
+2022-11-27 17:24:51.6432 Info AppDomain Shutting down. LogFactory closing...
+2022-11-27 17:24:51.6498 Debug Stopping file watching for path '/app' filter 'nlog.config'
+2022-11-27 17:24:51.6498 Debug Targets not configured for Logger: LoggerService.LoggerManager
+2022-11-27 17:24:51.6602 Debug Closing logging configuration...
+2022-11-27 17:24:51.6602 Trace Closing FileTarget(Name=logfile)
+2022-11-27 17:24:51.6694 Debug FileTarget(Name=logfile): Closing...
+2022-11-27 17:24:51.6694 Trace FileTarget(Name=logfile): FinalizeFile '/app/bin/Debug/net6.0/C:\temp\logs\2022-11-27_logfile.txt, isArchiving: False'
+2022-11-27 17:24:51.6793 Debug FileTarget(Name=logfile): FileAppender Closing Invalidate - /app/bin/Debug/net6.0/C:\temp\logs\2022-11-27_logfile.txt
+2022-11-27 17:24:51.6793 Trace FileTarget: Closing '/app/bin/Debug/net6.0/C:\temp\logs\2022-11-27_logfile.txt'
+2022-11-27 17:24:51.6905 Debug FileTarget(Name=logfile): Closed.
+2022-11-27 17:24:51.6905 Trace Closing C:\temp\logs\${shortdate}_logfile.txt
+2022-11-27 17:24:51.6985 Trace Closing Layout Renderer: ${literal}
+2022-11-27 17:24:51.6985 Trace Closing Layout Renderer: ${shortdate}
+2022-11-27 17:24:51.7069 Trace Closing Layout Renderer: ${literal}
+2022-11-27 17:24:51.7069 Trace Closing ${longdate} ${level:uppercase=true} ${message}
+2022-11-27 17:24:51.7069 Trace Closing Layout Renderer: ${longdate}
+2022-11-27 17:24:51.7184 Trace Closing Layout Renderer: ${literal}
+2022-11-27 17:24:51.7184 Trace Closing Layout Renderer: ${level}
+2022-11-27 17:24:51.7184 Trace Closing Layout Renderer: ${literal}
+2022-11-27 17:24:51.7305 Trace Closing Layout Renderer: ${message}
+2022-11-27 17:24:51.7305 Debug Finished closing logging configuration.
+2022-11-27 17:24:51.7394 Info LogFactory has been closed.
