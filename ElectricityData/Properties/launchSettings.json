@@ -25,7 +25,7 @@
       "environmentVariables": {
         "ASPNETCORE_URLS": "https://+:443;http://+:80",
         "ASPNETCORE_HTTPS_PORT": "44330",
-        "ConnectionStrings:DefaultConnection": "Data Source=MY_IP\\MY_INSTANCE;Initial Catalog=TestDb;User Id=MY_USER;Password=MY_PWD"
+        "ConnectionStrings:DefaultConnection": "Server=tcp:electricityproject.database.windows.net,1433;Initial Catalog=ElectricityProject;Persist Security Info=False;User ID=RoronoaZoro;Password=Bigmom333"
       },
       "httpPort": 10000,
       "useSSL": true,
