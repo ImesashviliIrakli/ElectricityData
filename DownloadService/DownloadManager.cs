@@ -54,7 +54,7 @@ namespace DownloadService
             try
             {
                 // Check if the data already exists in DB.
-                char getMonthNumber = month[month.Length - 1];
+                char getMonthNumber = month[^1];
                 int monthNumber = int.Parse(getMonthNumber.ToString());
 
                 List<AggregatedData> groupedRecords = await _context.AggregatedData.Where(x => x.Date.Month == monthNumber).ToListAsync();
@@ -96,8 +96,10 @@ namespace DownloadService
             string methodName = nameof(GetStream);
             try
             {
-                var _client = new HttpClient();
-                _client.Timeout = TimeSpan.FromSeconds(200);
+                var _client = new HttpClient
+                {
+                    Timeout = TimeSpan.FromSeconds(200)
+                };
 
                 var url = $"https://data.gov.lt/dataset/1975/download/{month}.csv";
 

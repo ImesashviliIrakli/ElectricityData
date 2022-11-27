@@ -58,7 +58,7 @@ namespace ElectricityData.Controllers
         {
             if(month > 5 || month < 2)
             {
-                return BadRequest("Wrong number");
+                return BadRequest("Wrong number for month");
             }
 
             List<AggregatedData> data = await _repository.GetByMonth(month);

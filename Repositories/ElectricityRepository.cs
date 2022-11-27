@@ -1,8 +1,4 @@
-﻿using CsvHelper.Configuration;
-using CsvHelper;
-using Enitites;
-using Microsoft.Extensions.Logging;
-using System.Globalization;
+﻿using Enitites;
 using Microsoft.EntityFrameworkCore;
 using Enitites.Data;
 using Contracts;
@@ -23,22 +19,7 @@ namespace Repositories
         }
         #endregion
 
-        public async Task<List<AggregatedData>> GetByMonth(int month)
-        {
-            string methodName = nameof(GetByMonth);
-
-            try
-            {
-                List<AggregatedData> result = await _context.AggregatedData.Where(x => x.Date.Month == month).ToListAsync();
-                return result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"{methodName} => Exception: {ex.Message}");
-                return null;
-            }
-        }
-
+        // Get all aggregated electricity data from DB.
         public async Task<List<AggregatedData>> GetAll()
         {
             string methodName = nameof(GetAll);
@@ -62,7 +43,25 @@ namespace Repositories
                 return null;
             }
         }
-    
+
+        // Get electricity data from DB by month.
+        public async Task<List<AggregatedData>> GetByMonth(int month)
+        {
+            string methodName = nameof(GetByMonth);
+
+            try
+            {
+                List<AggregatedData> result = await _context.AggregatedData.Where(x => x.Date.Month == month).ToListAsync();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{methodName} => Exception: {ex.Message}");
+                return null;
+            }
+        }
+
+        // Add electricity data to DB.
         public async Task<bool> Add(List<AggregatedData> data)
         {
             string methodName = nameof(Add);
@@ -74,7 +73,7 @@ namespace Repositories
                 _logger.LogInfo($"{methodName} => Successfully added to DB");
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"{methodName} => Exception: {ex.Message}");
                 return false;
