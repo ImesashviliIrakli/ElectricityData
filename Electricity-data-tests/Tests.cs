@@ -1,4 +1,5 @@
-﻿using Enitites;
+﻿using Contracts;
+using Enitites;
 using Enitites.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -22,7 +23,7 @@ namespace Electricity_data_tests
         {
             try
             {
-                ILogger<ElectricityRepository> logger = Mock.Of<ILogger<ElectricityRepository>>();
+                ILoggerManager logger = Mock.Of<ILoggerManager>();
 
                 s_dbContextOptions = new DbContextOptionsBuilder<AppDbContext>()
                     .UseSqlServer(s_connectionString)
@@ -49,7 +50,7 @@ namespace Electricity_data_tests
         {
             try
             {
-                ILogger<ElectricityRepository> logger = Mock.Of<ILogger<ElectricityRepository>>();
+                ILoggerManager logger = Mock.Of<ILoggerManager>();
 
                 s_dbContextOptions = new DbContextOptionsBuilder<AppDbContext>()
                     .UseSqlServer(s_connectionString)

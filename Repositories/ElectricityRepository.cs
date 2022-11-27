@@ -13,10 +13,10 @@ namespace Repositories
     {
         #region Injection
         private readonly AppDbContext _context;
-        private readonly ILogger<ElectricityRepository> _logger;
+        private readonly ILoggerManager _logger;
         public ElectricityRepository(
             AppDbContext context,
-            ILogger<ElectricityRepository> logger)
+            ILoggerManager logger)
         {
             _context = context;
             _logger = logger;
@@ -71,7 +71,7 @@ namespace Repositories
                 await _context.AggregatedData.AddRangeAsync(data);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"{methodName} => Successfully added to DB");
+                _logger.LogInfo($"{methodName} => Successfully added to DB");
                 return true;
             }
             catch(Exception ex)

@@ -1,31 +1,19 @@
 using Contracts;
 using DownloadService;
 using Enitites.Data;
+using LoggerService;
 using Microsoft.EntityFrameworkCore;
+using NLog;
 using Repositories;
-using Serilog;
-using Serilog.Formatting.Json;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 #region LoggerServices
-string path = @"c:\temp\logs\ElectricityData_logs.json";
-
-builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile(path: "appSettings.json", optional: false, reloadOnChange: true)
-            .AddEnvironmentVariables()
-            .Build();
-
-var logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration)
-    .WriteTo.File(new JsonFormatter(), path, shared: true)
-    .CreateLogger();
-
-builder.Logging.ClearProviders();
-builder.Logging.AddSerilog(logger);
+LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(),
+"/nlog.config"));
+builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
 #endregion
 
 #region DbContext
@@ -38,7 +26,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IElectricityRepository, ElectricityRepository>();
 builder.Services.AddTransient<IDownloadManager, DownloadManager>();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -53,9 +40,8 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var app = builder.Build();
 
 #region Create instance of DownloadDataRepository
-
 var dbcontext = app.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
-var log = app.Services.GetRequiredService<ILogger<DownloadManager>>();
+var log = app.Services.CreateScope().ServiceProvider.GetRequiredService<ILoggerManager>();
 var electricity = app.Services.CreateScope().ServiceProvider.GetRequiredService<IElectricityRepository>();
 var repository = new DownloadManager(dbcontext, log, electricity);
 #endregion

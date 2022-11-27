@@ -13,11 +13,11 @@ namespace DownloadService
     {
         #region Injection
         private readonly AppDbContext _context;
-        private readonly ILogger<DownloadManager> _logger;
+        private readonly ILoggerManager _logger;
         private readonly IElectricityRepository _repository;
         public DownloadManager(
             AppDbContext context,
-            ILogger<DownloadManager> logger,
+            ILoggerManager logger,
             IElectricityRepository repository)
         {
             //_client = client;
@@ -61,11 +61,11 @@ namespace DownloadService
 
                 if (groupedRecords.Count != 0)
                 {
-                    _logger.LogInformation($"{methodName} => Data already exists in the DB");
+                    _logger.LogInfo($"{methodName} => Data already exists in the DB");
                     return;
                 }
 
-                _logger.LogInformation($"{methodName} => Started downloading data");
+                _logger.LogInfo($"{methodName} => Started downloading data");
                 var stream = await GetStream(month);
 
                 if (stream == null)
@@ -82,7 +82,7 @@ namespace DownloadService
                     return;
                 }
 
-                _logger.LogInformation($"{methodName} => Data was added successfully");
+                _logger.LogInfo($"{methodName} => Data was added successfully");
             }
             catch (Exception ex)
             {
@@ -101,13 +101,13 @@ namespace DownloadService
 
                 var url = $"https://data.gov.lt/dataset/1975/download/{month}.csv";
 
-                _logger.LogInformation($"{methodName} => Getting stream from url");
+                _logger.LogInfo($"{methodName} => Getting stream from url");
 
                 // Download and read the data as a stream.
                 HttpResponseMessage response = await _client.GetAsync(url);
                 Stream readData = await response.Content.ReadAsStreamAsync();
 
-                _logger.LogInformation($"{methodName} => Successfully got stream for may");
+                _logger.LogInfo($"{methodName} => Successfully got stream for may");
 
                 return readData;
             }

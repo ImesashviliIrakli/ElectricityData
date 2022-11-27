@@ -16,9 +16,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enitites", "Enitites\Enitit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repositories", "Repositories\Repositories.csproj", "{CF201D67-9C6F-498B-A6BE-63FCAEDE66DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "Contracts\Contracts.csproj", "{C2FEE45F-81EC-4494-B57C-52056D9415B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "Contracts\Contracts.csproj", "{C2FEE45F-81EC-4494-B57C-52056D9415B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloadService", "DownloadService\DownloadService.csproj", "{0D32B5F9-0717-45AF-94DB-5B9E87EC3A6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DownloadService", "DownloadService\DownloadService.csproj", "{0D32B5F9-0717-45AF-94DB-5B9E87EC3A6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggerService", "LoggerService\LoggerService.csproj", "{F794307F-B97C-4C01-B65D-FB75CF13179A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +52,10 @@ Global
 		{0D32B5F9-0717-45AF-94DB-5B9E87EC3A6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D32B5F9-0717-45AF-94DB-5B9E87EC3A6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D32B5F9-0717-45AF-94DB-5B9E87EC3A6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F794307F-B97C-4C01-B65D-FB75CF13179A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F794307F-B97C-4C01-B65D-FB75CF13179A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F794307F-B97C-4C01-B65D-FB75CF13179A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F794307F-B97C-4C01-B65D-FB75CF13179A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
